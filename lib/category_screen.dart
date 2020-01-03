@@ -18,6 +18,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   final int index;
   bool pressed = false;
+  List<bool> inputs = new List<bool>();
   _CategoryScreenState({this.index});
 
   List<Memo> items = <Memo>[];
@@ -26,6 +27,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
+
     db.getMemosByCategory(this.index).then((memos) {
       setState(() {
         memos.forEach((memo) {
@@ -33,6 +35,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
         });
       });
     });
+
+    for (int i = 0; i < items.length; i++) {
+      inputs.add(true);
+    }
   }
 
   @override
@@ -40,7 +46,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
     print(this.index);
     return Scaffold(
       appBar: this.pressed
-          ? AppBar()
+          ? AppBar(
+              title: Text(
+                  widget.widgetList.elementAt(this.index - 1).elementAt(0)),
+              leading: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {},
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {},
+                ),
+              ],
+            )
           : AppBar(
               title: Text(
                   widget.widgetList.elementAt(this.index - 1).elementAt(0)),
@@ -56,7 +79,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ],
             ),
       body: pressed
-          ? Container()
+          ? Container(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          CheckboxListTile(
+                            value: inputs[index],
+                            title: Text(items.elementAt(index).text),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            onChanged: (bool value) {},
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
           : Container(
               child: ListView.builder(
                 itemCount: items.length,
