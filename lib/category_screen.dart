@@ -45,73 +45,97 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     print(this.index);
     return Scaffold(
-      appBar: this.pressed
-          ? AppBar(
-              title: Text(
-                  widget.widgetList.elementAt(this.index - 1).elementAt(0)),
-              leading: IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {},
-              ),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {},
+      appBar: AppBar(
+        title: Text(widget.widgetList.elementAt(this.index - 1).elementAt(0)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: _backToggle,
+        ),
+      ),
+      body: Container(
+        child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Dismissible(
+              child: Card(
+                child: ListTile(
+                  title: Text(items.elementAt(index).text),
                 ),
-                IconButton(
-                  icon: Icon(Icons.refresh),
-                  onPressed: () {},
-                ),
-              ],
-            )
-          : AppBar(
-              title: Text(
-                  widget.widgetList.elementAt(this.index - 1).elementAt(0)),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: _backToggle,
               ),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.more_horiz),
-                  onPressed: () {},
-                )
-              ],
-            ),
-      body: pressed
-          ? Container(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          CheckboxListTile(
-                            value: inputs[index],
-                            title: Text(items.elementAt(index).text),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            onChanged: (bool value) {},
-                          )
+              key: Key(items.elementAt(index).text),
+              background: slideRightBackground(),
+              secondaryBackground: slideLeftBackground(),
+              confirmDismiss: (direction) async {
+                if (direction == DismissDirection.endToStart) {
+                  final bool res = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Text('메모를 삭제하시겠습니까?'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text(
+                              '취소',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(
+                              '삭제',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _popFromMemos(items.elementAt(index).id);
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
                         ],
-                      ),
-                    ),
+                      );
+                    },
                   );
-                },
-              ),
-            )
-          : Container(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(items.elementAt(index).text),
-                    ),
+                } else {
+                  final bool res = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Text('카테고리를 초기화 하시겠습니까?'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text(
+                              '취소',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(
+                              '초기화',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _resetCategory(items.elementAt(index).id);
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   );
-                },
-              ),
-            ),
+                }
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -141,5 +165,63 @@ class _CategoryScreenState extends State<CategoryScreen> {
       }));
       print('update done');
     });
+  }
+
+  Widget slideRightBackground() {
+    return Container(
+      color: Colors.green,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            Text(
+              " 초기화",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+    );
+  }
+
+  Widget slideLeftBackground() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " 삭제",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
   }
 }
