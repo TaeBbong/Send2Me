@@ -4,7 +4,7 @@ import 'package:bubble/bubble.dart';
 class ChatWidget extends StatelessWidget {
   ChatWidget({this.text});
   final String text;
-  final String _name = "You";
+  final String _name = "나";
 
   @override
   Widget build(BuildContext context) {

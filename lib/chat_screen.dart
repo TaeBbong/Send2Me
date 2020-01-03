@@ -114,7 +114,17 @@ class ChatScreenState extends State<ChatScreen> {
     if (text.length == 0) {
       return;
     }
-    List<int> colors = [0xff91D4C2, 0xff45BB89, 0xff3D82AB, 0xff003853];
+    List<int> colors = [
+      0xff91D4C2,
+      0xff45BB89,
+      0xff3D82AB,
+      0xff003853,
+      0xffCD5C5C,
+      0xffF08080,
+      0xffFFA07A,
+      0xff808000,
+      0xff008080,
+    ];
     _textController.clear();
     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
