@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_memo/category_model.dart';
 import './memo_widget.dart';
 import './database_helper.dart';
 import './memo_model.dart';
@@ -10,7 +11,8 @@ class ListScreen extends StatefulWidget {
 }
 
 class ListScreenState extends State<ListScreen> {
-  List<Set> widgetList = [];
+  List<List> widgetList = [];
+  bool pressed = false;
 
   List colors = [
     Colors.lightGreen,
@@ -47,7 +49,7 @@ class ListScreenState extends State<ListScreen> {
         categories.forEach((category) {
           print(category['id']);
           widgetList.add(
-            {category['id'], category['text'], colors[category['id'] - 1]},
+            [category['id'], category['text'], colors[category['id'] - 1]],
           );
         });
       });
@@ -57,80 +59,169 @@ class ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("메모"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: _backToggle,
-        ),
-      ),
+      appBar: pressed
+          ? AppBar(
+              title: Text("카테고리를 수정하세요"),
+              leading: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    pressed = false;
+                  });
+                },
+              ),
+              actions: <Widget>[],
+            )
+          : AppBar(
+              title: Text("메모"),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: _backToggle,
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    setState(() {
+                      pressed = true;
+                    });
+                  },
+                )
+              ],
+            ),
       body: Column(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(5.0),
-            child: GridView.count(
-              crossAxisCount: 2,
-              controller: ScrollController(keepScrollOffset: false),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: widgetList.map((Set data) {
-                return InkWell(
-                  child: Container(
-                    height: 250.0,
-                    color: data.elementAt(2),
-                    margin: EdgeInsets.all(5.0),
-                    child: DragTarget(
-                      builder:
-                          (context, List<int> candidateData, rejectedData) {
-                        return Center(
-                          child: Text(
-                            data.elementAt(1),
-                            style:
-                                TextStyle(fontSize: 50.0, color: Colors.white),
+          pressed
+              ? Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    controller: ScrollController(keepScrollOffset: false),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: widgetList.map((List data) {
+                      return InkWell(
+                        child: Container(
+                          height: 250.0,
+                          color: data.elementAt(2),
+                          margin: EdgeInsets.all(5.0),
+                          child: Center(
+                            child: Text(
+                              data.elementAt(1),
+                              style: TextStyle(
+                                  fontSize: 50.0, color: Colors.white),
+                            ),
                           ),
-                        );
-                      },
-                      onWillAccept: (d) {
-                        print('will accept');
-                        print(data.elementAt(2));
-                        print(d);
-                        return true;
-                      },
-                      onAccept: (d) {
-                        print('accepted');
-                        print(data.elementAt(2));
-                        print(d);
-                        setState(() {
-                          _popFromMemos(d, data.elementAt(2));
-                        });
-                      },
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CategoryScreen(
-                          id: data.elementAt(0),
-                          text: data.elementAt(1),
                         ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-          Spacer(),
-          Divider(height: 1.0),
-          Container(
-              height: 80,
-              // padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                // color: Colors.lightBlueAccent,
-              ),
-              child: _buildChatItems()),
+                        onTap: () async {
+                          final bool res = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('카테고리 이름을 수정하세요'),
+                                  content: new Row(
+                                    children: <Widget>[
+                                      new Expanded(
+                                          child: new TextField(
+                                        autofocus: true,
+                                        decoration: new InputDecoration(
+                                          labelText: '카테고리 이름',
+                                          hintText: data.elementAt(1),
+                                        ),
+                                        onChanged: (value) {
+                                          data[1] = value;
+                                        },
+                                      ))
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('완료'),
+                                      onPressed: () {
+                                        setState(() {
+                                          db.updateCategory(Category(
+                                              data.elementAt(0),
+                                              data.elementAt(1)));
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    controller: ScrollController(keepScrollOffset: false),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: widgetList.map((List data) {
+                      return InkWell(
+                        child: Container(
+                          height: 250.0,
+                          color: data.elementAt(2),
+                          margin: EdgeInsets.all(5.0),
+                          child: DragTarget(
+                            builder: (context, List<int> candidateData,
+                                rejectedData) {
+                              return Center(
+                                child: Text(
+                                  data.elementAt(1),
+                                  style: TextStyle(
+                                      fontSize: 50.0, color: Colors.white),
+                                ),
+                              );
+                            },
+                            onWillAccept: (d) {
+                              print('will accept');
+                              print(data.elementAt(0));
+                              print(d);
+                              return true;
+                            },
+                            onAccept: (d) {
+                              print('accepted');
+                              print(data.elementAt(2));
+                              print(d);
+                              setState(() {
+                                _popFromMemos(d, data.elementAt(0));
+                              });
+                            },
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoryScreen(
+                                id: data.elementAt(0),
+                                text: data.elementAt(1),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+          pressed ? Container() : Spacer(),
+          pressed ? Container() : Divider(height: 1.0),
+          pressed
+              ? Container()
+              : Container(
+                  height: 80,
+                  // padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    // color: Colors.lightBlueAccent,
+                  ),
+                  child: _buildChatItems(),
+                ),
         ],
       ),
     );

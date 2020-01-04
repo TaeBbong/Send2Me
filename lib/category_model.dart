@@ -2,7 +2,7 @@ class Category {
   int _id;
   String _text;
 
-  Category(this._text);
+  Category(this._id, this._text);
 
   Category.map(dynamic obj) {
     this._id = obj['id'];
