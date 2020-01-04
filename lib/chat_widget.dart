@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatWidget extends StatelessWidget {
   ChatWidget({this.text});
@@ -20,7 +22,20 @@ class ChatWidget extends StatelessWidget {
               Text(_name, style: Theme.of(context).textTheme.subhead),
               Container(
                 margin: const EdgeInsets.only(top: 5.0),
-                child: Bubble(nip: BubbleNip.rightTop, child: Text(text)),
+                child: Bubble(
+                  nip: BubbleNip.rightTop,
+                  // child: Text(text),
+                  child: Linkify(
+                    onOpen: (link) async {
+                      if (await canLaunch(link.url)) {
+                        await launch(link.url);
+                      } else {
+                        throw 'Could not launch $link';
+                      }
+                    },
+                    text: text,
+                  ),
+                ),
               )
             ],
           ),
