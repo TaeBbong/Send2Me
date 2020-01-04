@@ -10,11 +10,13 @@ class ListScreen extends StatefulWidget {
 }
 
 class ListScreenState extends State<ListScreen> {
-  List<Set> widgetList = [
-    {'STUDY', Colors.lightGreen, 1},
-    {'QUICK', Colors.deepOrange, 2},
-    {'TODO', Colors.pink, 3},
-    {'IDEA', Colors.deepPurple, 4}
+  List<Set> widgetList = [];
+
+  List colors = [
+    Colors.lightGreen,
+    Colors.deepOrange,
+    Colors.pink,
+    Colors.deepPurple
   ];
 
   List<MemoWidget> items = <MemoWidget>[];
@@ -23,6 +25,7 @@ class ListScreenState extends State<ListScreen> {
   @override
   void initState() {
     super.initState();
+
     db.getMemosByCategory(0).then((memos) {
       setState(() {
         if (memos.length != 0) {
@@ -36,6 +39,17 @@ class ListScreenState extends State<ListScreen> {
             }
           });
         }
+      });
+    });
+
+    db.getAllCategories().then((categories) {
+      setState(() {
+        categories.forEach((category) {
+          print(category['id']);
+          widgetList.add(
+            {category['id'], category['text'], colors[category['id'] - 1]},
+          );
+        });
       });
     });
   }
@@ -63,14 +77,14 @@ class ListScreenState extends State<ListScreen> {
                 return InkWell(
                   child: Container(
                     height: 250.0,
-                    color: data.elementAt(1),
+                    color: data.elementAt(2),
                     margin: EdgeInsets.all(5.0),
                     child: DragTarget(
                       builder:
                           (context, List<int> candidateData, rejectedData) {
                         return Center(
                           child: Text(
-                            data.elementAt(0),
+                            data.elementAt(1),
                             style:
                                 TextStyle(fontSize: 50.0, color: Colors.white),
                           ),
@@ -94,10 +108,14 @@ class ListScreenState extends State<ListScreen> {
                   ),
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CategoryScreen(index: data.elementAt(2))));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryScreen(
+                          id: data.elementAt(0),
+                          text: data.elementAt(1),
+                        ),
+                      ),
+                    );
                   },
                 );
               }).toList(),

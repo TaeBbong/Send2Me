@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'memo_model.dart';
+import 'category_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,6 +17,10 @@ class DatabaseHelper {
   final String columnText = 'text';
   final String columnColor = 'color';
   final String columnCategory = 'category';
+
+  final String table_category = 'Category';
+  final String cat_columnId = 'id';
+  final String cat_columnText = 'text';
 
   static Database _db;
 
@@ -43,6 +48,10 @@ class DatabaseHelper {
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $table($columnId INTEGER PRIMARY KEY, $columnText TEXT, $columnColor INTEGER, $columnCategory INTEGER)');
+    await db.execute(
+        'CREATE TABLE $table_category($cat_columnId INTEGER PRIMARY KEY, $cat_columnText TEXT)');
+    await db.execute(
+        'INSERT INTO $table_category VALUES (1, "QUICK"), (2, "STUDY"), (3, "TODO"), (4, "IDEA")');
   }
 
   Future<int> saveMemo(Memo memo) async {
@@ -61,6 +70,21 @@ class DatabaseHelper {
     var result = await dbClient.rawQuery('SELECT * FROM $table');
 
     return result.toList();
+  }
+
+  Future<List> getAllCategories() async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery('SELECT * FROM $table_category');
+
+    return result.toList();
+  }
+
+  Future<int> updateCategory(Category category) async {
+    var dbClient = await db;
+    return await dbClient.update(table_category, category.toMap(),
+        where: "$cat_columnId = ?", whereArgs: [category.id]);
+//    return await dbClient.rawUpdate(
+//        'UPDATE $tableNote SET $columnTitle = \'${note.title}\', $columnDescription = \'${note.description}\' WHERE $columnId = ${note.id}');
   }
 
   Future<List> getMemosByCategory(int category) async {

@@ -5,23 +5,17 @@ import './memo_model.dart';
 import './database_helper.dart';
 
 class CategoryScreen extends StatefulWidget {
-  List<Set> widgetList = [
-    {'STUDY', Colors.lightGreen, 1},
-    {'QUICK', Colors.deepOrange, 2},
-    {'TODO', Colors.pink, 3},
-    {'IDEA', Colors.deepPurple, 4}
-  ];
-
-  final int index;
-  CategoryScreen({Key key, this.index}) : super(key: key);
-  _CategoryScreenState createState() => _CategoryScreenState(index: this.index);
+  final int id;
+  final String text;
+  CategoryScreen({Key key, this.id, this.text}) : super(key: key);
+  _CategoryScreenState createState() =>
+      _CategoryScreenState(id: this.id, text: this.text);
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  final int index;
-  bool pressed = false;
-  List<bool> inputs = new List<bool>();
-  _CategoryScreenState({this.index});
+  final int id;
+  final String text;
+  _CategoryScreenState({this.id, this.text});
 
   List<Memo> items = <Memo>[];
   DatabaseHelper db = DatabaseHelper();
@@ -30,25 +24,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     super.initState();
 
-    db.getMemosByCategory(this.index).then((memos) {
+    db.getMemosByCategory(this.id).then((memos) {
       setState(() {
         memos.forEach((memo) {
           items.add(Memo.fromMap(memo));
         });
       });
     });
-
-    for (int i = 0; i < items.length; i++) {
-      inputs.add(true);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(this.index);
+    print(this.id);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.widgetList.elementAt(this.index - 1).elementAt(0)),
+        title: Text(this.text),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: _backToggle,
