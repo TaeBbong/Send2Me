@@ -40,16 +40,20 @@ class ChatScreenState extends State<ChatScreen> {
                   margin: const EdgeInsets.only(right: 16.0),
                   child: CircleAvatar(child: Text("M")),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("나에게 보내기", style: Theme.of(context).textTheme.subhead),
-                    Container(
-                      margin: const EdgeInsets.only(top: 5.0),
-                      child: Bubble(
-                          nip: BubbleNip.leftTop, child: Text("메모를 나에게 보내세요")),
-                    )
-                  ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("나에게 보내기",
+                          style: Theme.of(context).textTheme.subhead),
+                      Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: Bubble(
+                            nip: BubbleNip.leftTop,
+                            child: Text("메모를 나에게 보내세요")),
+                      )
+                    ],
+                  ),
                 ),
                 Spacer(),
               ],
@@ -123,7 +127,7 @@ class ChatScreenState extends State<ChatScreen> {
       0xffF08080,
       0xffFFA07A,
       0xff808000,
-      0xff008080,
+      0xff008080
     ];
     _textController.clear();
     _scrollController.animateTo(_scrollController.position.maxScrollExtent,

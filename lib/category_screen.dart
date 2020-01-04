@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import './memo_model.dart';
 import './database_helper.dart';
 
@@ -59,7 +61,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
             return Dismissible(
               child: Card(
                 child: ListTile(
-                  title: Text(items.elementAt(index).text),
+                  // title: Text(items.elementAt(index).text),
+                  title: Linkify(
+                    onOpen: (link) async {
+                      if (await canLaunch(link.url)) {
+                        await launch(link.url);
+                      } else {
+                        throw 'Could not launch $link';
+                      }
+                    },
+                    text: items.elementAt(index).text,
+                    maxLines: 3,
+                  ),
                 ),
               ),
               key: Key(items.elementAt(index).text),
