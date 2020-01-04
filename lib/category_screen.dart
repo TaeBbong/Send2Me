@@ -48,6 +48,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: ListView.builder(
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
+            print(items.elementAt(index).text);
             return Dismissible(
               child: Card(
                 child: ListTile(
@@ -63,6 +64,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     text: items.elementAt(index).text,
                     maxLines: 3,
                   ),
+                  subtitle: Text(items.elementAt(index).date),
                 ),
               ),
               key: Key(items.elementAt(index).text),
@@ -164,7 +166,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         'id': data,
         'text': memo.toMap()['text'],
         'color': memo.toMap()['color'],
-        'category': 0
+        'category': 0,
+        'date': memo.toMap()['date'],
       }));
       print('update done');
     });

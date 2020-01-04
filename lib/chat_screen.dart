@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
+import 'package:intl/intl.dart';
 import 'dart:math';
 import './chat_widget.dart';
 import './database_helper.dart';
@@ -135,10 +136,12 @@ class ChatScreenState extends State<ChatScreen> {
     var message = ChatWidget(text: text);
     setState(() {
       int r_color = (colors.toList()..shuffle()).first;
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
       _messages.add(message);
       // _messages.insert(0, message);
-      db.saveMemo(Memo(text, r_color, 0)).then((_) {
-        print('save done with $text, $r_color');
+      db.saveMemo(Memo(text, r_color, 0, formattedDate)).then((_) {
+        print('save done with $text, $r_color, $formattedDate');
       });
     });
   }

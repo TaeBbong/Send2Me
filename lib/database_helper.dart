@@ -17,6 +17,7 @@ class DatabaseHelper {
   final String columnText = 'text';
   final String columnColor = 'color';
   final String columnCategory = 'category';
+  final String columnDate = 'date';
 
   final String table_category = 'Category';
   final String cat_columnId = 'id';
@@ -47,7 +48,7 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $table($columnId INTEGER PRIMARY KEY, $columnText TEXT, $columnColor INTEGER, $columnCategory INTEGER)');
+        'CREATE TABLE $table($columnId INTEGER PRIMARY KEY, $columnText TEXT, $columnColor INTEGER, $columnCategory INTEGER, $columnDate TEXT)');
     await db.execute(
         'CREATE TABLE $table_category($cat_columnId INTEGER PRIMARY KEY, $cat_columnText TEXT)');
     await db.execute(
@@ -104,7 +105,13 @@ class DatabaseHelper {
   Future<Memo> getMemo(int id) async {
     var dbClient = await db;
     List<Map> result = await dbClient.query(table,
-        columns: [columnId, columnText, columnColor, columnCategory],
+        columns: [
+          columnId,
+          columnText,
+          columnColor,
+          columnCategory,
+          columnDate
+        ],
         where: '$columnId = ?',
         whereArgs: [id]);
 //    var result = await dbClient.rawQuery('SELECT * FROM $tableNote WHERE $columnId = $id');

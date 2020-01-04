@@ -240,7 +240,8 @@ class ListScreenState extends State<ListScreen> {
         'id': data,
         'text': memo.toMap()['text'],
         'color': memo.toMap()['color'],
-        'category': category
+        'category': category,
+        'date': memo.toMap()['date'],
       }));
       print('update done');
     });
