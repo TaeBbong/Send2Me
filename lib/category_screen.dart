@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter_memo/memo_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './memo_model.dart';
 import './database_helper.dart';
@@ -49,94 +50,106 @@ class _CategoryScreenState extends State<CategoryScreen> {
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
             print(items.elementAt(index).text);
-            return Dismissible(
-              child: Card(
-                child: ListTile(
-                  // title: Text(items.elementAt(index).text),
-                  title: Linkify(
-                    onOpen: (link) async {
-                      if (await canLaunch(link.url)) {
-                        await launch(link.url);
-                      } else {
-                        throw 'Could not launch $link';
-                      }
-                    },
-                    text: items.elementAt(index).text,
-                    maxLines: 3,
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MemoScreen(
+                      memo_id: items.elementAt(index).id,
+                    ),
                   ),
-                  subtitle: Text(items.elementAt(index).date),
-                ),
-              ),
-              key: Key(items.elementAt(index).text),
-              background: slideRightBackground(),
-              secondaryBackground: slideLeftBackground(),
-              confirmDismiss: (direction) async {
-                if (direction == DismissDirection.endToStart) {
-                  final bool res = await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Text('메모를 삭제하시겠습니까?'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(
-                              '취소',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: Text(
-                              '삭제',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _popFromMemos(items.elementAt(index).id);
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  final bool res = await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Text('카테고리를 초기화 하시겠습니까?'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(
-                              '취소',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: Text(
-                              '초기화',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _resetCategory(items.elementAt(index).id);
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                );
               },
+              child: Dismissible(
+                child: Card(
+                  child: ListTile(
+                    // title: Text(items.elementAt(index).text),
+                    title: Linkify(
+                      onOpen: (link) async {
+                        if (await canLaunch(link.url)) {
+                          await launch(link.url);
+                        } else {
+                          throw 'Could not launch $link';
+                        }
+                      },
+                      text: items.elementAt(index).text,
+                      maxLines: 3,
+                    ),
+                    subtitle: Text(items.elementAt(index).date),
+                  ),
+                ),
+                key: Key(items.elementAt(index).text),
+                background: slideRightBackground(),
+                secondaryBackground: slideLeftBackground(),
+                confirmDismiss: (direction) async {
+                  if (direction == DismissDirection.endToStart) {
+                    final bool res = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text('메모를 삭제하시겠습니까?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                '취소',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                '삭제',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _popFromMemos(items.elementAt(index).id);
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    final bool res = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text('카테고리를 초기화 하시겠습니까?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                '취소',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                '초기화',
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _resetCategory(items.elementAt(index).id);
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             );
           },
         ),

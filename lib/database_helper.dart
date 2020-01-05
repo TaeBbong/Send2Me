@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:flutter_memo/comment_model.dart';
+import 'package:flutter_memo/memo_model.dart';
+import 'package:flutter_memo/category_model.dart';
 
-import 'memo_model.dart';
-import 'category_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -68,8 +68,6 @@ class DatabaseHelper {
   Future<int> saveMemo(Memo memo) async {
     var dbClient = await db;
     var result = await dbClient.insert(table, memo.toMap());
-//    var result = await dbClient.rawInsert(
-//        'INSERT INTO $tableNote ($columnTitle, $columnDescription) VALUES (\'${note.title}\', \'${note.description}\')');
 
     return result;
   }

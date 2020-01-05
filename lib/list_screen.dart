@@ -73,7 +73,7 @@ class ListScreenState extends State<ListScreen> {
               actions: <Widget>[],
             )
           : AppBar(
-              title: Text("메모"),
+              title: Text("카테고리"),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios),
                 onPressed: _backToggle,
