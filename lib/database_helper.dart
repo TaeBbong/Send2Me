@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:flutter_memo/comment_model.dart';
+
 import 'memo_model.dart';
 import 'category_model.dart';
 import 'package:path/path.dart';
@@ -22,6 +24,12 @@ class DatabaseHelper {
   final String table_category = 'Category';
   final String cat_columnId = 'id';
   final String cat_columnText = 'text';
+
+  final String table_comment = 'Comment';
+  final String com_columnId = 'id';
+  final String com_columnRoot = 'rootid';
+  final String com_columnText = 'text';
+  final String com_columnDate = 'date';
 
   static Database _db;
 
@@ -52,6 +60,8 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $table_category($cat_columnId INTEGER PRIMARY KEY, $cat_columnText TEXT)');
     await db.execute(
+        'CREATE TABLE $table_comment($com_columnId INTEGER PRIMARY KEY, $com_columnRoot INTEGER, $com_columnText TEXT, $com_columnDate TEXT)');
+    await db.execute(
         'INSERT INTO $table_category VALUES (1, "QUICK"), (2, "STUDY"), (3, "TODO"), (4, "IDEA")');
   }
 
@@ -62,6 +72,35 @@ class DatabaseHelper {
 //        'INSERT INTO $tableNote ($columnTitle, $columnDescription) VALUES (\'${note.title}\', \'${note.description}\')');
 
     return result;
+  }
+
+  Future<int> saveComment(Comment comment) async {
+    var dbClient = await db;
+    var result = await dbClient.insert(table_comment, comment.toMap());
+    return result;
+  }
+
+  Future<List> getCommentsByRoot(int rootId) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        'SELECT * FROM $table_comment WHERE $com_columnRoot == $rootId');
+
+    return result.toList();
+  }
+
+  Future<int> updateComment(Comment comment) async {
+    var dbClient = await db;
+    return await dbClient.update(table_comment, comment.toMap(),
+        where: "$com_columnId = ?", whereArgs: [comment.id]);
+//    return await dbClient.rawUpdate(
+//        'UPDATE $tableNote SET $columnTitle = \'${note.title}\', $columnDescription = \'${note.description}\' WHERE $columnId = ${note.id}');
+  }
+
+  Future<int> deleteComment(int id) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete(table_comment, where: '$com_columnId = ?', whereArgs: [id]);
+//    return await dbClient.rawDelete('DELETE FROM $tableNote WHERE $columnId = $id');
   }
 
   Future<List> getAllMemos() async {
