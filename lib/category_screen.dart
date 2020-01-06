@@ -52,14 +52,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
             print(items.elementAt(index).text);
             return InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MemoScreen(
-                      memo_id: items.elementAt(index).id,
-                    ),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => MemoScreen(
+                //       memo_id: items.elementAt(index).id,
+                //     ),
+                //   ),
+                // );
               },
               child: Dismissible(
                 child: Card(
