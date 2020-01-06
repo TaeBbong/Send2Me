@@ -10,17 +10,6 @@ class ChatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Bubble(
-    //   style: BubbleStyle(
-    //     nip: BubbleNip.leftTop,
-    //     color: Colors.white,
-    //     elevation: 1 * 0.5,
-    //     margin: BubbleEdges.only(top: 8.0, right: 50.0),
-    //     alignment: Alignment.topLeft,
-    //   ),
-    //   child: Text('Hi Jason. Sorry to bother you. I have a queston for you.'),
-    // );
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
@@ -39,7 +28,6 @@ class ChatWidget extends StatelessWidget {
                     elevation: 1 * 0.5,
                     alignment: Alignment.topRight,
                     margin: BubbleEdges.only(left: 30.0),
-                    // child: Text(text),
                     child: Linkify(
                       onOpen: (link) async {
                         if (await canLaunch(link.url)) {
@@ -58,7 +46,10 @@ class ChatWidget extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(left: 16.0),
-            child: CircleAvatar(child: Text(_name[0])),
+            child: CircleAvatar(
+              child: Text(_name[0]),
+              backgroundColor: Color(0xff28385e),
+            ),
           ),
         ],
       ),

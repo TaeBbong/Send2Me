@@ -1,5 +1,6 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:random_color/random_color.dart';
 
 class MemoWidget extends StatelessWidget {
   MemoWidget({this.text, this.color, this.id});
@@ -10,6 +11,9 @@ class MemoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color c = Color(color);
+
+    RandomColor _randomColor = RandomColor();
+    Color _color = _randomColor.randomColor();
     print('hi');
     print(text);
     if (text.length == 0) {
@@ -27,7 +31,7 @@ class MemoWidget extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                 )),
-            backgroundColor: c,
+            backgroundColor: _color,
           ),
         ),
       ),
@@ -42,7 +46,7 @@ class MemoWidget extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                     )),
-                backgroundColor: c,
+                backgroundColor: _color,
               ),
             ),
             Container(
@@ -65,7 +69,16 @@ class MemoWidget extends StatelessWidget {
           ],
         ),
       ),
-      childWhenDragging: Container(),
+      childWhenDragging: Container(
+        margin: const EdgeInsets.only(left: 16.0),
+        child: CircleAvatar(
+          child: Text(text[0],
+              style: TextStyle(
+                color: Colors.white,
+              )),
+          backgroundColor: Colors.white,
+        ),
+      ),
       onDragStarted: () {
         print(id);
         print('drag start');

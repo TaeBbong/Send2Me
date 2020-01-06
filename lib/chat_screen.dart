@@ -39,7 +39,10 @@ class ChatScreenState extends State<ChatScreen> {
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(right: 16.0),
-                  child: CircleAvatar(child: Text("M")),
+                  child: CircleAvatar(
+                    child: Text("M"),
+                    backgroundColor: Colors.blueGrey,
+                  ),
                 ),
                 Flexible(
                   child: Column(
@@ -105,7 +108,10 @@ class ChatScreenState extends State<ChatScreen> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
-                icon: Icon(Icons.send),
+                icon: Icon(
+                  Icons.send,
+                  color: Colors.black,
+                ),
                 onPressed: () => _handleSubmitted(_textController.text),
               ),
             )

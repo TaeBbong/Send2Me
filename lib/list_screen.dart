@@ -15,10 +15,10 @@ class ListScreenState extends State<ListScreen> {
   bool pressed = false;
 
   List colors = [
-    Colors.lightGreen,
-    Colors.deepOrange,
-    Colors.pink,
-    Colors.deepPurple
+    Color(0xffACCBE1),
+    Color(0xff516c8d),
+    Color(0xff304163),
+    Color(0xff28385e),
   ];
 
   List<MemoWidget> items = <MemoWidget>[];
@@ -103,13 +103,20 @@ class ListScreenState extends State<ListScreen> {
                       return InkWell(
                         child: Container(
                           height: 250.0,
-                          color: data.elementAt(2),
                           margin: EdgeInsets.all(5.0),
-                          child: Center(
-                            child: Text(
-                              data.elementAt(1),
-                              style: TextStyle(
-                                  fontSize: 50.0, color: Colors.white),
+                          child: Card(
+                            elevation: 5,
+                            color: colors.elementAt(
+                              data.elementAt(0) - 1,
+                            ),
+                            child: Center(
+                              child: Text(
+                                data.elementAt(1),
+                                style: TextStyle(
+                                  fontSize: 50.0,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -165,16 +172,24 @@ class ListScreenState extends State<ListScreen> {
                       return InkWell(
                         child: Container(
                           height: 250.0,
-                          color: data.elementAt(2),
+                          // color: data.elementAt(2),
                           margin: EdgeInsets.all(5.0),
                           child: DragTarget(
                             builder: (context, List<int> candidateData,
                                 rejectedData) {
-                              return Center(
-                                child: Text(
-                                  data.elementAt(1),
-                                  style: TextStyle(
-                                      fontSize: 50.0, color: Colors.white),
+                              return Card(
+                                elevation: 5,
+                                color: colors.elementAt(
+                                  data.elementAt(0) - 1,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    data.elementAt(1),
+                                    style: TextStyle(
+                                      fontSize: 50.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               );
                             },
