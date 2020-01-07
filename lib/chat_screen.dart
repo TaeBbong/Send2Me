@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
+import 'package:flutter_memo/list_screen.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 import './chat_widget.dart';
@@ -94,7 +95,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _menuToggle() {
     print('List Page');
-    Navigator.pushNamed(context, '/second');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ListScreen()));
   }
 
   Widget _buildTextComposer() {

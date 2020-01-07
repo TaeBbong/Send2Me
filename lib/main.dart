@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_memo/intro_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './chat_screen.dart';
 import './list_screen.dart';
 import 'dart:async';
@@ -49,18 +51,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  startTime() async {
-    var _duration = new Duration(seconds: 1);
-    return new Timer(_duration, () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ChatScreen()));
-    });
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => ChatScreen()));
+    } else {
+      await prefs.setBool('seen', true);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => OnBoardingPage()));
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    startTime();
+    Timer(Duration(milliseconds: 1500), () {
+      checkFirstSeen();
+    });
   }
 
   @override

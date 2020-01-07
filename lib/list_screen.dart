@@ -124,6 +124,7 @@ class ListScreenState extends State<ListScreen> {
                           final bool res = await showDialog(
                               context: context,
                               builder: (BuildContext context) {
+                                print('showing dialog');
                                 return AlertDialog(
                                   title: Text('카테고리 이름을 수정하세요'),
                                   content: new Row(
