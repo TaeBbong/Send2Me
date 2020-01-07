@@ -22,6 +22,13 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("나에게 보내기"),
+        leading: IconButton(
+          icon: Icon(
+            Icons.forward,
+            color: Colors.transparent,
+          ),
+          onPressed: () {},
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.list),
