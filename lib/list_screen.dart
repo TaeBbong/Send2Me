@@ -127,14 +127,25 @@ class ListScreenState extends State<ListScreen> {
                                 print('showing dialog');
                                 return AlertDialog(
                                   title: Text('카테고리 이름을 수정하세요'),
-                                  content: new Row(
+                                  content: Row(
                                     children: <Widget>[
-                                      new Expanded(
-                                          child: new TextField(
+                                      Expanded(
+                                          child: TextField(
+                                        cursorColor: Colors.blueGrey,
                                         autofocus: true,
-                                        decoration: new InputDecoration(
+                                        decoration: InputDecoration(
                                           labelText: '카테고리 이름',
+                                          labelStyle:
+                                              TextStyle(color: Colors.grey),
                                           hintText: data.elementAt(1),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
                                         ),
                                         onChanged: (value) {
                                           data[1] = value;
@@ -144,7 +155,12 @@ class ListScreenState extends State<ListScreen> {
                                   ),
                                   actions: <Widget>[
                                     FlatButton(
-                                      child: Text('완료'),
+                                      child: Text(
+                                        '완료',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                       onPressed: () {
                                         setState(() {
                                           db.updateCategory(Category(
