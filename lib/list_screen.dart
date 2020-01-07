@@ -113,7 +113,7 @@ class ListScreenState extends State<ListScreen> {
                               child: Text(
                                 data.elementAt(1),
                                 style: TextStyle(
-                                  fontSize: 50.0,
+                                  fontSize: 30.0,
                                   color: Colors.white,
                                 ),
                               ),
@@ -203,7 +203,7 @@ class ListScreenState extends State<ListScreen> {
                                   child: Text(
                                     data.elementAt(1),
                                     style: TextStyle(
-                                      fontSize: 50.0,
+                                      fontSize: 30.0,
                                       color: Colors.white,
                                     ),
                                   ),
